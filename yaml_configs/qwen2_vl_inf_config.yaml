@@ -1,0 +1,12 @@
+project:
+  name: "xml_vision_finetuning"
+  experiment_version: "1"
+  model_type: "qwen2"
+  
+model:
+  model_name: ""
+  max_seq_length: 8192
+  load_in_4bit: True
+
+inference:
+  max_new_tokens: 4096

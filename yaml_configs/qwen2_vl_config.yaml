@@ -1,0 +1,48 @@
+project:
+  name: "xml_vision_finetuning"
+  experiment_version: "1"
+  model_type: "qwen"
+
+data:
+  train_filepath: ""
+  test_size: 0.15
+  random_state: 42
+  dataset_text_field: ""
+
+model:
+  model_name: "unsloth/Qwen2-VL-7B-Instruct"
+  load_in_4bit: True #or False
+  use_gradient_checkpointing: "unsloth" #for long context
+  r: 16
+  lora_alpha: 32 #alpha *2 r
+  lora_dropout: 0
+  bias: "none"
+  random_state: 3407
+  use_rslora: True #rank stabilized LORA
+  loftq_config: None #loftQ
+  max_seq_length: 2048 #can go upto 128k but will affect memory performance
+  finetune_vision_layers: False #False if not finetuning vision layers
+  finetune_language_layers: True # True if finetuning language layers
+  finetune_attention_modules: True # True if finetuning attention layers
+  finetune_mlp_modules: True # True if finetuning MLP layers,
+
+training:
+  dataset_num_proc: 2
+  packing: False
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 1
+  warmup_steps: 50
+  num_train_epochs : 3
+  learning_rate: 2e-4
+  logging_steps: 25
+  eval_strategy: "steps"
+  eval_steps: 25
+  optim: "adamw_8bit"
+  weight_decay: 0.01
+  lr_scheduler_type: "linear"
+  seed: 3407
+  report_to: "wandb"
+  remove_unused_columns: False 
+  dataset_kwargs: {"skip_prepare_dataset": True}
+  
