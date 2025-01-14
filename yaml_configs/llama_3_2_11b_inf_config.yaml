@@ -4,7 +4,7 @@ project:
   model_type: "llama3.2"
   
 model:
-  model_name: "637Koleshjr/case_law_finetuningunsloth_Meta-Llama-3.1-8B-Instruct-1-3-epochs-lr-2e-4"
+  model_name: ""
   max_seq_length: 8192
   load_in_4bit: True
 

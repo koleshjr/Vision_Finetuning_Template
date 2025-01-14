@@ -7,6 +7,7 @@ data:
   train_filepath: ""
   test_size: 0.15
   random_state: 42
+  dataset_text_field: ""
 
 model:
   model_name: "unsloth/Llama-3.2-11B-Vision-Instruct"
@@ -42,4 +43,8 @@ training:
   lr_scheduler_type: "linear"
   seed: 3407
   report_to: "wandb"
+  remove_unused_columns: False 
+  dataset_kwargs: {"skip_prepare_dataset": True}
+  
+
   
