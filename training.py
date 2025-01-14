@@ -9,6 +9,8 @@ from datasets import Dataset
 import pandas as pd 
 import numpy as np 
 from PIL import Image
+from collections import defaultdict
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from unsloth import FastVisionModel
 from unsloth.trainer import UnslothVisionDataCollator
@@ -64,12 +66,18 @@ def prepare_data(config):
         return Image.open(image_path).convert("RGB")
     
     train['image'] = train['image_path'].apply(load_image)
-    train = train.drop(columns = ['image_path'])
 
+    train_dict = defaultdict(list)
+    for idx in tqdm(range(len(train)), desc="Captioning"):
+        img = train['image'].iloc(idx)
+        label = train['label'].iloc(idx)
+        train_dict['image'].append(img)
+        train_dict['label'].append(label)
 
-    train_df, eval_df = train_test_split(train, test_size=config['data']['test_size'], random_state= config['data']['random_state'])
-    train_dataset = Dataset.from_pandas(train_df)
-    eval_dataset = Dataset.from_pandas(eval_df)
+    dataset = Dataset.from_dict(train_dict)
+    dataset = dataset.filter(lambda example: example['image'] is not None)
+    
+    train_dataset, eval_dataset = dataset.train_test_split(test_size=0.1, seed=3407).values()
     converted_train_dataset =  [convert_to_conversation(sample) for sample in train_dataset]
     converted_eval_dataset =  [convert_to_conversation(sample) for sample in eval_dataset]
     return converted_train_dataset, converted_eval_dataset
