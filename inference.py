@@ -7,6 +7,7 @@ import statistics
 import time
 import pandas as pd
 from collections import defaultdict
+from tqdm import tqdm
 from PIL import Image
 from datasets import Dataset
 from unsloth import FastVisionModel
@@ -39,7 +40,7 @@ def prepare_data(config):
     for idx in tqdm(range(len(test)), desc="Captioning..."):
         img = test['image'].iloc[idx]
         test_dict['image'].append(img)
-        
+
     test_dataset = Dataset.from_dict(test_dict)
 
     converted_test_dataset =  [convert_to_conversation(sample) for sample in test_dataset]
